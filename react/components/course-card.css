@@ -1,0 +1,46 @@
+/* cls prevention for cards */
+.cls-course-card {
+  min-height: 264px;
+}
+/* ipad portrait */
+@media (max-width: 1024px) {
+  .cls-course-card {
+    min-height: 290px; /* Example for tablets */
+  }
+}
+/* ipad landscape */
+@media (max-width: 1366px) {
+  .cls-course-card {
+    min-height: 290px; /* Example for tablets */
+  }
+}
+
+@media (max-width: 480px) {
+  .cls-course-card {
+    min-height: 264px; /* Example for mobile devices */
+  }
+}
+
+/* cls prevention for images */
+.cls-course-img {
+  min-height: 150px;
+  background: #ccc;
+}
+/* ipad portrait */
+@media (max-width: 1024px) {
+  .cls-course-img {
+    min-height: 150px; /* Example for tablets */
+  }
+}
+/* ipad landscape */
+@media (max-width: 1366px) {
+  .cls-course-img {
+    min-height: 150px; /* Example for tablets */
+  }
+}
+
+@media (max-width: 480px) {
+  .cls-course-img {
+    min-height: 150px; /* Example for mobile devices */
+  }
+}

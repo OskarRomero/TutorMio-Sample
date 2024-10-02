@@ -1,0 +1,36 @@
+#course-thumb {
+  object-fit: cover; /* Do not scale the image */
+  object-position: 50% 30%; /* Center the image within the element */
+  width: 100%;
+  max-height: 150px;
+  margin-bottom: 2px;
+}
+
+.course-font {
+  color: #6c757d !important;
+  font-family: Nunito, sans-serif !important;
+}
+.header-wt {
+  font-weight: 700;
+  font-size: calc(1.275rem + 0.3vw);
+  line-height: 1.1;
+}
+
+#courses-cls-size {
+  min-height: 744.66px;
+}
+
+@media (max-width: 1024px) {
+  #courses-cls-size {
+    min-height: 960px; /* Example for tablets */
+  }
+}
+
+@media (max-width: 480px) {
+  #courses-cls-size {
+    min-height: 1728px; /* Example for mobile devices */
+  }
+}
+/*
+1263 x 692.66
+*/
