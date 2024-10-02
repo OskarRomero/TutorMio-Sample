@@ -3,7 +3,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.min.js";
 import "./App.css";
-import { jwtDecode } from "jwt-decode";
+
 import RootLayout from "./pages/layouts/RootLayout";
 // import AdminLayout from "./pages/layouts/AdminLayout";
 import Landing from "./pages/landing/Landing";
@@ -42,13 +42,7 @@ function App() {
     },
   });
   useEffect(() => {
-    const ifToken = localStorage.getItem("tutorMioToken");
-    if (ifToken && !currentUser.isLoggedIn) {
-      const decodedToken = jwtDecode(ifToken);
-      const currentTime = Date.now() / 1000;
-      decodedToken.exp > currentTime
-        ? logInUser()
-        : localStorage.removeItem("tutorMioToken");
+      //logic to check whether token is current, otherwise remove
     }
   }, [currentUser.isLoggedIn]);
 
@@ -265,37 +259,10 @@ function App() {
         },
       ],
     },
-    //sample protected layout
-    // {
-    //   path: "/admin",
-    //   element: (
-    //     <AdminLayout
-    //       user={currentUser}
-    //       navigateToClass={setActiveClass}
-    //       clearWishList={onRemoveFromWishlist}
-    //       removeClass={onRemoveFromWishlist}
-    //       removePlan={onRemovePlanFromWishlist}
-    //       bubblingLang={onLanguageChange}
-    //       updateUser={userLoggedIn}
-    //     />
-    //   ),
-    //   errorElement: <PageNotFound />,
-    //   children: [
-    //     {
-    //       index: true,
-    //       element: <Landing language={currentUser.language} />,
-    //     },
-    //     {
-    //       path: "login",
-    //       element: <LogIn updateUser={currentUser.language} />,
-    //     },
-    //   ],
-    // },
   ]);
 
   return (
     <Suspense fallback={<p style={{ position: "absolute" }}>loading...</p>}>
-      {/* <ToastContainer /> */}
       <RouterProvider router={router} future={{ v7_startTransition: true }} />
     </Suspense>
   );
