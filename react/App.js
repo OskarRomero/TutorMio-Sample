@@ -55,7 +55,7 @@ function App() {
   }
 
   function logOutUser() {
-    localStorage.removeItem("tutorMioToken");
+   /* Remove token */
     setCurrentUser((prevState) => {
       let newState = { ...prevState };
       newState.isLoggedIn = false;
