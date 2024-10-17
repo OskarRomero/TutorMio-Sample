@@ -140,9 +140,9 @@ namespace TutorMioAPI1.Controllers
             return StatusCode(code, response);
         }
 
-        //ADD NEW COURSE
-        [HttpPost]
-        public ActionResult<ItemResponse<int>> Create(CourseAddRequest model)
+        //ADD NEW COURSE OLD
+        [HttpPost("old")]
+        public ActionResult<ItemResponse<int>> CreateV1(CourseAddRequest model)
         {
             ObjectResult result = null;
             try
@@ -158,28 +158,54 @@ namespace TutorMioAPI1.Controllers
             }
             return result;
         }
+       
+        //ADD NEW COURSE W/ Multiple Classes
+        [Authorize]
+        [HttpPost]
+        public ActionResult<ItemResponse<int>> Create(CourseAddRequest model)
+        {
+            ObjectResult result = null;
+            try
+            {
+                int id = _service.AddWithClasses(model);
+                ItemResponse<int> response = new ItemResponse<int>() { Item = id };
+                result = Created("", response);
+            }
+            catch (Exception ex)
+            {
+                ErrorResponse response = new ErrorResponse(ex.Message);
+                result = StatusCode(500, response);
+            }
+            return result;
+        }
 
         //UPDATE COURSE
+        [Authorize]
         [HttpPut("{id:int}")]
-        public ActionResult<ItemResponse<int>> UpdateCourse(CourseUpdateRequest model)
+        public ActionResult<ItemResponse<int>> UpdateCourse(int id, CourseUpdateRequest model)
         {
+            if (id != model.Id)
+            {
+                return BadRequest();
+            }
             int code = 200;
             BaseResponse response = null;
-                try
-                {
+            //model.Id = id;
+            try
+            {
                 _service.Update(model);
                 response = new SuccessResponse();
-                }
-                catch (Exception ex)
-                {
-                    code =500;
-                    response= new ErrorResponse(ex.Message);
-                }
+            }
+            catch (Exception ex)
+            {
+                code = 500;
+                response = new ErrorResponse(ex.Message);
+            }
             return StatusCode(code, response);
-
         }
 
         //DELETE COURSE
+        [Authorize]
         [HttpDelete("{id:int}")]
         public ActionResult<ItemResponse<int>> UpdateStatus(int id)
         {
