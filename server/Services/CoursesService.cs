@@ -131,23 +131,90 @@ namespace TutorMioAPI1.Services
             return id;
         }
 
+        public int AddWithClasses(CourseAddRequest model)
+        {
+            int id = 0;
+            DataTable myParamValue = null;
+            if (model.Classes != null)
+            {
+                myParamValue = MapClassesToTable(model.Classes);
+            }
+            _data.ExecuteNonQuery("[dbo].[Courses_Insert_DetailedV2]",
+                inputParamMapper: delegate (SqlParameterCollection col)
+                {
+                    col.AddWithValue("@Name", model.Name);
+                    col.AddWithValue("@ImgUrl", model.ImgUrl);
+                    col.AddWithValue("@Description", model.Description);
+                    col.AddWithValue("@Language", model.Language);
+                    col.AddWithValue("@Classes", myParamValue);
+                    SqlParameter idOut = new SqlParameter("@CourseId", SqlDbType.Int);
+                    idOut.Direction = ParameterDirection.Output;
+                    col.Add(idOut);
+                },  returnParameters: delegate (SqlParameterCollection returnCollection)
+                {
+                    object oId = returnCollection["@CourseId"].Value;
+                    int.TryParse(oId.ToString(), out id);
+                });
+            return id;
+
+        }
+        private DataTable MapClassesToTable(List<ClassAddRequest> classes)
+        {
+            DataTable dt = new DataTable();
+            dt.Columns.Add("ClassTitle", typeof(string));
+            dt.Columns.Add("ClassHours", typeof(float));
+            dt.Columns.Add("ClassDescription",typeof(string));
+            dt.Columns.Add("ClassImgUrl",typeof (string));
+            dt.Columns.Add("FeatureOne", typeof(string));
+            dt.Columns.Add("FeatureTwo", typeof(string));
+            dt.Columns.Add("FeatureThree", typeof(string));
+            dt.Columns.Add("FeatureFour", typeof(string));
+            
+            if (classes != null)
+            {
+                foreach(ClassAddRequest c in classes)
+                {
+                    DataRow dr = dt.NewRow();
+                    int idx = 0;
+                    dr.SetField(idx++, c.Title);
+                    dr.SetField(idx++, c.Hours);
+                    dr.SetField(idx++, c.Description);
+                    dr.SetField(idx++, c.ImgUrl);
+                    dr.SetField(idx++, c.FeatureOne);
+                    dr.SetField(idx++, c.FeatureTwo);
+                    dr.SetField(idx++, c.FeatureThree);
+                    dr.SetField(idx++, c.FeatureFour);
+                    dt.Rows.Add(dr);
+                }
+            }
+            return dt;
+        }
+
         public void Update(CourseUpdateRequest model)
         {
-            string procName = "[dbo].[Courses_Update]";
-            _data.ExecuteNonQuery(procName, inputParamMapper: delegate (SqlParameterCollection col)
+            DataTable myParamValue = null;
+            if (model.Classes != null)
             {
-                AddCommonParams(model, col);
-                col.AddWithValue("@Id", model.Id);
-
-            }, returnParameters: null);
+                myParamValue = MapClassesToTable(model.Classes);
+            }
+            _data.ExecuteNonQuery("[dbo].[Courses_Update_Detailed]",
+                inputParamMapper: delegate (SqlParameterCollection col)
+                {
+                    col.AddWithValue("@CourseId", model.Id);
+                    col.AddWithValue("@Name", model.Name);
+                    col.AddWithValue("@ImgUrl", model.ImgUrl);
+                    col.AddWithValue("@Description", model.Description);
+                    col.AddWithValue("@Language", model.Language);
+                    col.AddWithValue("@Classes", myParamValue);
+                }, returnParameters: null);
         }
 
         public void Delete(int id)
         {
-            string procName = "[dbo].[Courses_Delete_ById]";
+            string procName = "[dbo].[Courses_DeleteDetails_ById]";
             _data.ExecuteNonQuery(procName, inputParamMapper: delegate (SqlParameterCollection col)
             {
-                col.AddWithValue("@Id", id);
+                col.AddWithValue("@CourseId", id);
 
             }, returnParameters: null
             );
